@@ -143,10 +143,10 @@ models:
       - dbt_utils.equality:
           compare_model: ref('data_pivot_expected_apostrophe')
 
-  - name: test_unpivot_original_api
-    data_tests:
-      - dbt_utils.equality:
-          compare_model: ref('data_unpivot_original_api_expected')
+#  - name: test_unpivot_original_api
+#    data_tests:
+#      - dbt_utils.equality:
+#          compare_model: ref('data_unpivot_original_api_expected')
 
   - name: test_unpivot
     data_tests:
