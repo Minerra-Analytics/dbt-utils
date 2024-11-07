@@ -1,0 +1,11 @@
+c_id_string,c_attr_int,c_attr_string,c_attr_date
+"a",1,one,2018-01-01
+"b",2,two,2018-01-02
+"c",3,three,2018-01-03
+"d",4,four,2018-01-04
+"e",5,five,2018-01-05
+"f",6,six,2018-01-06
+"g",7,seven,2018-01-07
+"h",8,eight,2018-01-08
+"i",9,nine,2018-01-09
+"j",10,ten,2018-01-10
