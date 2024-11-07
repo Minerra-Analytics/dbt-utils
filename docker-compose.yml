@@ -4,5 +4,6 @@ services:
     image: cimg/postgres:9.6
     environment:
       - POSTGRES_USER=root
+      - POSTGRES_DB=dbt_utils_test
     ports:
       - "5432:5432"
