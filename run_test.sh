@@ -1,4 +1,5 @@
 #!/bin/bash
+# run_test.sh postgres|snowflake|bigquery
 
 # Show location of local install of dbt
 echo $(which dbt)

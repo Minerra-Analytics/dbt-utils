@@ -261,3 +261,66 @@ models:
           compare_model: ref('data_test_equality_a')
           exclude_columns:
             - col_c
+
+  - name: test_lookup_min
+    columns:
+      - name: dim_a_sk
+        tests:
+          - unique
+    data_tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('dim_a')
+ 
+  - name: test_lookup_max
+    columns:
+      - name: dim_a_sk
+        tests:
+          - unique
+    data_tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('dim_a')
+
+  - name: test_lookup_first
+    columns:
+      - name: dim_a_sk
+        tests:
+          - unique
+    data_tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('dim_a')
+
+  - name: test_lookup_2_first
+    columns:
+      - name: dim_a_sk
+        tests:
+          - unique
+    data_tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('dim_a')
+
+  - name: test_lookup_2_min
+    columns:
+      - name: dim_a_sk
+        tests:
+          - unique
+    data_tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('dim_a')
+
+  - name: test_lookup_2_max
+    columns:
+      - name: dim_a_sk
+        tests:
+          - unique
+    data_tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('dim_a')
+
+  - name: test_lookup_default
+    columns:
+      - name: dim_a_sk
+        tests:
+          - unique
+    data_tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('dim_a')

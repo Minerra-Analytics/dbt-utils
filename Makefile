@@ -2,7 +2,7 @@
 
 .PHONY: test
 test: ## Run the integration tests.
-	@\
+	@echo "Running integration tests for $(target)"
 	tox -e dbt_integration_$(target)
 
 .PHONY: dev

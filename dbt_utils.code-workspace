@@ -1,0 +1,119 @@
+{
+  "folders": [
+    {
+      "name": "dbt_utils",
+      "path": "."
+    },
+    // Example of additional folders
+    // {
+    //   "name": "Documentation",
+    //   "path": "../docs"
+    // }
+  ],
+  "settings": {
+    // Editor settings
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.wordWrap": "on",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.tabSize": 2,
+
+    // File settings
+    "files.exclude": {
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/build": true
+    },
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/node_modules/**": true,
+      "**/dist/**": true,
+      "**/build/**": true
+    },
+
+    // Search settings
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/build": true
+    },
+
+    // Language specific settings
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    // Task configurations
+    "tasks": {
+      "version": "2.0.0",
+      "tasks": [
+        {
+          "label": "build",
+          "type": "npm",
+          "script": "build",
+          "group": {
+            "kind": "build",
+            "isDefault": true
+          }
+        },
+        {
+          "label": "test",
+          "type": "npm",
+          "script": "test",
+          "group": {
+            "kind": "test",
+            "isDefault": true
+          }
+        }
+      ]
+    },
+
+    // Launch configurations
+    "launch": {
+      "version": "0.2.0",
+      "configurations": [
+        {
+          "type": "node",
+          "request": "launch",
+          "name": "Debug Program",
+          "skipFiles": [
+            "<node_internals>/**"
+          ],
+          "program": "${workspaceFolder}/src/index.js"
+        }
+      ]
+    },
+
+    // Extension recommendations
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "eamodio.gitlens",
+      "formulahendry.auto-rename-tag",
+      "christian-kohler.path-intellisense"
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "eamodio.gitlens",
+      "formulahendry.auto-rename-tag",
+      "christian-kohler.path-intellisense",
+      "mtxr.sqltools",
+      "mtxr.sqltools-driver-pg",
+      "koszti.sqltools-driver-bigquery",
+      "innoverio.vscode-dbt-power-user",
+      "bastienboutonnet.vscode-dbt",
+      "redhat.vscode-yaml",
+      "samuelcolvin.jinjahtml",
+      "visualstudioexptteam.vscodeintellicode"
+    ]
+  }
+}
