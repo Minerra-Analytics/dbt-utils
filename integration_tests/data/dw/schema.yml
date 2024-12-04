@@ -1,0 +1,42 @@
+version: 2
+
+seeds:
+  - name: fact
+    description: Fact table
+    columns:
+      - name: fact_sk
+      - name: dim_a_id
+      - name: attr_int
+      - name: attr_string
+      - name: attr_date
+    config:
+        column_types:
+            fact_sk: int
+            dim_a_id: int
+            attr_int: int
+            attr_string: text
+            attr_date: date
+
+  - name: dim_a
+    description: Dimension table
+    columns:
+      - name: dim_a_sk
+      - name: dim_a_id 
+      - name: a_id
+      - name: dim_attr_int
+      - name: dim_attr_string
+      - name: dim_str_date
+      - name: b_id_int
+      - name: c_id_string
+      - name: d_id_date
+    config:
+        column_types:
+            dim_a_sk: int
+            dim_a_id: int
+            a_id: int
+            dim_attr_int: int
+            dim_attr_string: text
+            dim_str_date: date
+            b_id_int: int
+            c_id_string: text
+            d_id_date: date
