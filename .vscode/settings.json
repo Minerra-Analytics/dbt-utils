@@ -1,0 +1,75 @@
+{
+    // Editor settings
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.wordWrap": "on",
+    "editor.minimap.enabled": false,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
+    "editor.tabSize": 2,
+    "editor.rulers": [80, 100],
+    "editor.suggestSelection": "first",
+    "editor.inlineSuggest.enabled": true,
+    "editor.quickSuggestions": {
+        "strings": true
+    },
+
+    // File settings
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.autoSave": "onFocusChange",
+    "files.associations": {
+        "*.sql": "jinja-sql",
+        "*.yml": "jinja-yaml",
+        "*.yaml": "jinja-yaml",
+        "*.md": "jinja-md"
+    },
+
+    // DBT settings
+    "dbt.queryLimit": 500,
+    "dbt.enableNewLineagePanel": true,
+    "dbt.altimateInstanceName": "minerra",
+
+    // Language specific settings
+    "[jinja-sql]": {
+        "editor.defaultFormatter": "innoverio.vscode-dbt-power-user",
+        "editor.formatOnSave": false
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    // Git settings
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.autofetch": false,
+    "git.ignoreRebaseWarning": true,
+
+    // Terminal settings
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "terminal.integrated.fontSize": 12,
+
+    // Explorer settings
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+
+    // Workbench settings
+    "workbench.startupEditor": "none",
+    "workbench.editor.enablePreview": false,
+
+    // Remote settings
+    "remote.autoForwardPortsSource": "hybrid",
+    "security.allowedUNCHosts": [
+        "wsl.localhost"
+    ],
+
+    // SQL settings
+    "sqltools.useNodeRuntime": true
+}

@@ -1,0 +1,913 @@
+diff --git a/.env b/.env
+new file mode 100644
+index 0000000..bdd8f4b
+--- /dev/null
++++ b/.env
+@@ -0,0 +1,7 @@
++POSTGRES_HOST=localhost
++POSTGRES_USER=root
++DBT_ENV_SECRET_POSTGRES_PASS=password
++POSTGRES_PORT=5432
++POSTGRES_DATABASE=dbt_utils_test
++POSTGRES_SCHEMA=dbt_utils_integration_tests_postgres
++target=postgres
+diff --git a/.vscode/settings.json b/.vscode/settings.json
+new file mode 100644
+index 0000000..733797f
+--- /dev/null
++++ b/.vscode/settings.json
+@@ -0,0 +1,75 @@
++{
++    // Editor settings
++    "editor.formatOnSave": true,
++    "editor.formatOnPaste": true,
++    "editor.wordWrap": "on",
++    "editor.minimap.enabled": false,
++    "editor.bracketPairColorization.enabled": true,
++    "editor.guides.bracketPairs": true,
++    "editor.tabSize": 2,
++    "editor.rulers": [80, 100],
++    "editor.suggestSelection": "first",
++    "editor.inlineSuggest.enabled": true,
++    "editor.quickSuggestions": {
++        "strings": true
++    },
++
++    // File settings
++    "files.trimTrailingWhitespace": true,
++    "files.insertFinalNewline": true,
++    "files.trimFinalNewlines": true,
++    "files.autoSave": "onFocusChange",
++    "files.associations": {
++        "*.sql": "jinja-sql",
++        "*.yml": "jinja-yaml",
++        "*.yaml": "jinja-yaml",
++        "*.md": "jinja-md"
++    },
++
++    // DBT settings
++    "dbt.queryLimit": 500,
++    "dbt.enableNewLineagePanel": true,
++    "dbt.altimateInstanceName": "minerra",
++
++    // Language specific settings
++    "[jinja-sql]": {
++        "editor.defaultFormatter": "innoverio.vscode-dbt-power-user",
++        "editor.formatOnSave": false
++    },
++    "[javascript]": {
++        "editor.defaultFormatter": "esbenp.prettier-vscode"
++    },
++    "[typescript]": {
++        "editor.defaultFormatter": "esbenp.prettier-vscode"
++    },
++    "[json]": {
++        "editor.defaultFormatter": "esbenp.prettier-vscode"
++    },
++
++    // Git settings
++    "git.enableSmartCommit": true,
++    "git.confirmSync": false,
++    "git.autofetch": false,
++    "git.ignoreRebaseWarning": true,
++
++    // Terminal settings
++    "terminal.integrated.defaultProfile.windows": "Git Bash",
++    "terminal.integrated.fontSize": 12,
++
++    // Explorer settings
++    "explorer.confirmDelete": false,
++    "explorer.confirmDragAndDrop": false,
++
++    // Workbench settings
++    "workbench.startupEditor": "none",
++    "workbench.editor.enablePreview": false,
++
++    // Remote settings
++    "remote.autoForwardPortsSource": "hybrid",
++    "security.allowedUNCHosts": [
++        "wsl.localhost"
++    ],
++
++    // SQL settings
++    "sqltools.useNodeRuntime": true
++}
+diff --git a/Makefile b/Makefile
+index 7481cf6..d1989d5 100644
+--- a/Makefile
++++ b/Makefile
+@@ -2,7 +2,7 @@
+ 
+ .PHONY: test
+ test: ## Run the integration tests.
+-	@\
++	@echo "Running integration tests for $(target)"
+ 	tox -e dbt_integration_$(target)
+ 
+ .PHONY: dev
+diff --git a/Todo.md b/Todo.md
+new file mode 100644
+index 0000000..e69de29
+diff --git a/dbt_project.yml b/dbt_project.yml
+index b3dd396..4b36c27 100644
+--- a/dbt_project.yml
++++ b/dbt_project.yml
+@@ -5,7 +5,12 @@ require-dbt-version: [">=1.3.0", "<2.0.0"]
+ 
+ config-version: 2
+ 
++profile: dbt_utils
++
+ target-path: "target"
+ clean-targets: ["target", "dbt_modules", "dbt_packages"]
+ macro-paths: ["macros"]
+ log-path: "logs"
++
++config:
++  use_colors_file: False
+diff --git a/dbt_utils.code-workspace b/dbt_utils.code-workspace
+new file mode 100644
+index 0000000..cdff726
+--- /dev/null
++++ b/dbt_utils.code-workspace
+@@ -0,0 +1,119 @@
++{
++  "folders": [
++    {
++      "name": "dbt_utils",
++      "path": "."
++    },
++    // Example of additional folders
++    // {
++    //   "name": "Documentation",
++    //   "path": "../docs"
++    // }
++  ],
++  "settings": {
++    // Editor settings
++    "editor.formatOnSave": true,
++    "editor.formatOnPaste": true,
++    "editor.wordWrap": "on",
++    "editor.bracketPairColorization.enabled": true,
++    "editor.tabSize": 2,
++
++    // File settings
++    "files.exclude": {
++      "**/.git": true,
++      "**/.DS_Store": true,
++      "**/node_modules": true,
++      "**/dist": true,
++      "**/build": true
++    },
++    "files.watcherExclude": {
++      "**/.git/objects/**": true,
++      "**/.git/subtree-cache/**": true,
++      "**/node_modules/**": true,
++      "**/dist/**": true,
++      "**/build/**": true
++    },
++
++    // Search settings
++    "search.exclude": {
++      "**/node_modules": true,
++      "**/dist": true,
++      "**/build": true
++    },
++
++    // Language specific settings
++    "[javascript]": {
++      "editor.defaultFormatter": "esbenp.prettier-vscode"
++    },
++    "[typescript]": {
++      "editor.defaultFormatter": "esbenp.prettier-vscode"
++    },
++
++    // Task configurations
++    "tasks": {
++      "version": "2.0.0",
++      "tasks": [
++        {
++          "label": "build",
++          "type": "npm",
++          "script": "build",
++          "group": {
++            "kind": "build",
++            "isDefault": true
++          }
++        },
++        {
++          "label": "test",
++          "type": "npm",
++          "script": "test",
++          "group": {
++            "kind": "test",
++            "isDefault": true
++          }
++        }
++      ]
++    },
++
++    // Launch configurations
++    "launch": {
++      "version": "0.2.0",
++      "configurations": [
++        {
++          "type": "node",
++          "request": "launch",
++          "name": "Debug Program",
++          "skipFiles": [
++            "<node_internals>/**"
++          ],
++          "program": "${workspaceFolder}/src/index.js"
++        }
++      ]
++    },
++
++    // Extension recommendations
++    "recommendations": [
++      "esbenp.prettier-vscode",
++      "dbaeumer.vscode-eslint",
++      "eamodio.gitlens",
++      "formulahendry.auto-rename-tag",
++      "christian-kohler.path-intellisense"
++    ]
++  },
++  "extensions": {
++    "recommendations": [
++      "esbenp.prettier-vscode",
++      "dbaeumer.vscode-eslint",
++      "eamodio.gitlens",
++      "formulahendry.auto-rename-tag",
++      "christian-kohler.path-intellisense",
++      "mtxr.sqltools",
++      "mtxr.sqltools-driver-pg",
++      "koszti.sqltools-driver-bigquery",
++      "innoverio.vscode-dbt-power-user",
++      "bastienboutonnet.vscode-dbt",
++      "redhat.vscode-yaml",
++      "samuelcolvin.jinjahtml",
++      "visualstudioexptteam.vscodeintellicode"
++    ]
++  }
++}
+diff --git a/integration_tests/data/dw/dim_a.csv b/integration_tests/data/dw/dim_a.csv
+index 755892c..6d48199 100644
+--- a/integration_tests/data/dw/dim_a.csv
++++ b/integration_tests/data/dw/dim_a.csv
+@@ -1,4 +1,4 @@
+-dim_a_sk,dim_a_id,a_id,dim_attr_int,dim_attr_string,dim_str_date,b_id_int,c_id_string,d_id_date
++dim_a_sk,dim_a_id,a_id,dim_attr_int,dim_attr_string,dim_str_date,id_int,id_string,id_date
+ 0,0,0,0,"",2000-01-01,0,"",2000-01-01
+ 1,1,1,1,one,2018-01-01,1,a,2018-01-01
+ 2,2,2,2,two,2018-01-02,2,b,2018-01-02
+@@ -10,4 +10,5 @@ dim_a_sk,dim_a_id,a_id,dim_attr_int,dim_attr_string,dim_str_date,b_id_int,c_id_s
+ 8,8,8,8,eight,2018-01-08,8,h,2018-01-08
+ 9,9,9,9,nine,2018-01-09,9,i,2018-01-09
+ 10,10,10,10,ten,2018-01-10,10,j,2018-01-10    
+-20,20,20,20,two_zero,2018-01-20,20,j,2018-01-20    
+\ No newline at end of file
++20,20,20,20,two_zero,2018-01-20,20,j,2018-01-20    
++21,21,21,21,two_one,2018-01-21,,k,2018-01-21    
+\ No newline at end of file
+diff --git a/integration_tests/data/dw/schema.yml b/integration_tests/data/dw/schema.yml
+index 2b0f5d8..7093b1c 100644
+--- a/integration_tests/data/dw/schema.yml
++++ b/integration_tests/data/dw/schema.yml
+@@ -26,9 +26,9 @@ seeds:
+       - name: dim_attr_int
+       - name: dim_attr_string
+       - name: dim_str_date
+-      - name: b_id_int
+-      - name: c_id_string
+-      - name: d_id_date
++      - name: id_int
++      - name: id_string
++      - name: id_date
+     config:
+         column_types:
+             dim_a_sk: int
+@@ -37,6 +37,20 @@ seeds:
+             dim_attr_int: int
+             dim_attr_string: text
+             dim_str_date: date
+-            b_id_int: int
+-            c_id_string: text
+-            d_id_date: date
++            id_int: int
++            id_string: text
++            id_date: date
++
++  - name: tbl_lookup_one_column_id
++    description: Lookup table
++    columns:
++      - name: id_int
++      - name: attr_int 
++      - name: attr_string
++      - name: attr_date
++    config:
++        column_types:
++            id_int: int
++            attr_int: int
++            attr_string: text
++            attr_date: date
+diff --git a/integration_tests/data/dw/b.csv b/integration_tests/data/dw/tbl_lookup_one_column_id.csv
+similarity index 74%
+rename from integration_tests/data/dw/b.csv
+rename to integration_tests/data/dw/tbl_lookup_one_column_id.csv
+index 58ecb0c..0265c67 100644
+--- a/integration_tests/data/dw/b.csv
++++ b/integration_tests/data/dw/tbl_lookup_one_column_id.csv
+@@ -1,4 +1,4 @@
+-b_id_int,b_attr_int,b_attr_string,b_attr_date
++id_int,attr_int,attr_string,attr_date
+ 1,1,one,2018-01-01
+ 2,2,two,2018-01-02
+ 3,3,three,2018-01-03
+@@ -9,3 +9,4 @@ b_id_int,b_attr_int,b_attr_string,b_attr_date
+ 8,8,eight,2018-01-08
+ 9,9,nine,2018-01-09
+ 10,10,ten,2018-01-10
++10,10,ten_duplicate,2018-01-10
+diff --git a/integration_tests/data/dw/tbl_lookup_two_column_id.csv b/integration_tests/data/dw/tbl_lookup_two_column_id.csv
+new file mode 100644
+index 0000000..2e10aa1
+--- /dev/null
++++ b/integration_tests/data/dw/tbl_lookup_two_column_id.csv
+@@ -0,0 +1,12 @@
++id_int,id_str,attr_int,attr_string,attr_date
++1,"a",1,one,2018-01-01
++2,"b",2,two,2018-01-02
++3,"c",3,three,2018-01-03
++4,"d",4,four,2018-01-04
++5,"e",5,five,2018-01-05
++6,"f",6,six,2018-01-06
++7,"g",7,seven,2018-01-07
++8,"h",8,eight,2018-01-08
++9,"i",9,nine,2018-01-09
++10,"j",10,ten,2018-01-10
++10,"j",10,ten_duplicate,2018-01-10
+diff --git a/integration_tests/models/dw/test_lookup_2_first.sql b/integration_tests/models/dw/test_lookup_2_first.sql
+new file mode 100644
+index 0000000..22e1ce0
+--- /dev/null
++++ b/integration_tests/models/dw/test_lookup_2_first.sql
+@@ -0,0 +1,15 @@
++with dim_a as (
++    {{ dbt_utils.stage_sql(ref("dim_a")) }}
++),
++lookup_first as (
++    {{ dbt_utils.lookup_return_many_cols(
++        main_table='dim_a', col_to_lookup=['id_int','id_string'],
++        lookup_table=ref("tbl_lookup_two_column_id"), lookup_col=['id_int','id_str'],
++        return_col=['attr_int', 'attr_string', 'attr_date'], 
++        rename_col=['attr_int_first', 'attr_string_first', 'attr_date_first'],
++        lookup_default=['0',"''"], 
++        return_default=['0', "''", 'NULL'], 
++        picker_fn='first'
++    )}}
++)
++select * from lookup_first
+\ No newline at end of file
+diff --git a/integration_tests/models/dw/test_lookup_2_max.sql b/integration_tests/models/dw/test_lookup_2_max.sql
+new file mode 100644
+index 0000000..c4eea60
+--- /dev/null
++++ b/integration_tests/models/dw/test_lookup_2_max.sql
+@@ -0,0 +1,15 @@
++with dim_a as (
++    {{ dbt_utils.stage_sql(ref("dim_a")) }}
++),
++lookup_first as (
++    {{ dbt_utils.lookup_return_many_cols(
++        main_table='dim_a', col_to_lookup=['id_int','id_string'],
++        lookup_table=ref("tbl_lookup_two_column_id"), lookup_col=['id_int','id_str'],
++        return_col=['attr_int', 'attr_string', 'attr_date'], 
++        rename_col=['attr_int_max', 'attr_string_max', 'attr_date_max'],
++        lookup_default=['0',"''"], 
++        return_default=['0', "''", 'NULL'], 
++        picker_fn='max'
++    )}}
++)
++select * from lookup_first
+\ No newline at end of file
+diff --git a/integration_tests/models/dw/test_lookup_2_min.sql b/integration_tests/models/dw/test_lookup_2_min.sql
+new file mode 100644
+index 0000000..0f3a3be
+--- /dev/null
++++ b/integration_tests/models/dw/test_lookup_2_min.sql
+@@ -0,0 +1,15 @@
++with dim_a as (
++    {{ dbt_utils.stage_sql(ref("dim_a")) }}
++),
++lookup_first as (
++    {{ dbt_utils.lookup_return_many_cols(
++        main_table='dim_a', col_to_lookup=['id_int','id_string'],
++        lookup_table=ref("tbl_lookup_two_column_id"), lookup_col=['id_int','id_str'],
++        return_col=['attr_int', 'attr_string', 'attr_date'], 
++        rename_col=['attr_int_min', 'attr_string_min', 'attr_date_min'],
++        lookup_default=['0',"''"], 
++        return_default=['0', "''", 'NULL'], 
++        picker_fn='min'
++    )}}
++)
++select * from lookup_first
+\ No newline at end of file
+diff --git a/integration_tests/models/dw/test_lookup_default.sql b/integration_tests/models/dw/test_lookup_default.sql
+new file mode 100644
+index 0000000..9ed9c8d
+--- /dev/null
++++ b/integration_tests/models/dw/test_lookup_default.sql
+@@ -0,0 +1,10 @@
++with dim_a as (
++    {{ dbt_utils.stage_sql(ref("dim_a")) }}
++),
++lookup_default as (
++    {{ dbt_utils.lookup_one(
++        main_table='dim_a', col_to_lookup='id_int',
++        lookup_table=ref("tbl_lookup_one_column_id")
++    )}}
++)
++select * from lookup_default
+\ No newline at end of file
+diff --git a/integration_tests/models/dw/test_lookup_first.sql b/integration_tests/models/dw/test_lookup_first.sql
+new file mode 100644
+index 0000000..94b1b9d
+--- /dev/null
++++ b/integration_tests/models/dw/test_lookup_first.sql
+@@ -0,0 +1,13 @@
++with dim_a as (
++    {{ dbt_utils.stage_sql(ref("dim_a")) }}
++),
++lookup_first as (
++    {{ dbt_utils.lookup_one(
++        main_table='dim_a', col_to_lookup='id_int',
++        lookup_table=ref("tbl_lookup_one_column_id"), lookup_col='id_int',
++        return_col='attr_int', rename_col='attr_int_first',
++        lookup_default='0', return_default='0', 
++        picker_fn='first'
++    )}}
++)
++select * from lookup_first
+\ No newline at end of file
+diff --git a/integration_tests/models/dw/test_lookup_max.sql b/integration_tests/models/dw/test_lookup_max.sql
+new file mode 100644
+index 0000000..99e48e8
+--- /dev/null
++++ b/integration_tests/models/dw/test_lookup_max.sql
+@@ -0,0 +1,13 @@
++with dim_a as (
++    {{ dbt_utils.stage_sql(ref("dim_a")) }}
++),
++lookup_max as (
++    {{ dbt_utils.lookup_one(
++        main_table='dim_a', col_to_lookup='id_int',
++        lookup_table=ref("tbl_lookup_one_column_id"), lookup_col='id_int',
++        return_col='attr_int', rename_col='attr_int_max',
++        lookup_default='0', return_default='0', 
++        picker_fn='max'
++    )}}
++)
++select * from lookup_max
+\ No newline at end of file
+diff --git a/integration_tests/models/dw/test_lookup_min.sql b/integration_tests/models/dw/test_lookup_min.sql
+new file mode 100644
+index 0000000..e6f7dbd
+--- /dev/null
++++ b/integration_tests/models/dw/test_lookup_min.sql
+@@ -0,0 +1,13 @@
++with dim_a as (
++    {{ dbt_utils.stage_sql(ref("dim_a")) }}
++),
++lookup_min as (
++    {{ dbt_utils.lookup_one(
++        main_table='dim_a', col_to_lookup='id_int',
++        lookup_table=ref("tbl_lookup_one_column_id"), lookup_col='id_int',
++        return_col='attr_int', rename_col='attr_int_max',
++        lookup_default='0', return_default='0', 
++        picker_fn='min'
++    )}}
++)
++select * from lookup_min
+\ No newline at end of file
+diff --git a/integration_tests/models/dw/test_lookup_one_row.sql b/integration_tests/models/dw/test_lookup_one_row.sql
+deleted file mode 100644
+index 95c30e6..0000000
+--- a/integration_tests/models/dw/test_lookup_one_row.sql
++++ /dev/null
+@@ -1,31 +0,0 @@
+-with dim_a as (
+-    {{ dbt_utils.stage_sql(ref("dim_a")) }}
+-),
+-lookup_b_dupe as (
+-    {{ dbt_utils.lookup_one(
+-        main_table='dim_a', col_to_lookup='b_id_int',
+-        lookup_table=ref("b_dupe"), lookup_col='b_id_int',
+-        return_col='b_attr_int', rename_col='b_attr_int_min',
+-        lookup_default='0', return_default='0', 
+-        picker_fn='min'
+-    )}}
+-),
+-lookup_b_dupe_first as (
+-    {{ dbt_utils.lookup_one(
+-        main_table='lookup_b_dupe', col_to_lookup='b_id_int',
+-        lookup_table=ref("b_dupe"), lookup_col='b_id_int',
+-        return_col='b_attr_int', rename_col='b_attr_int_first',
+-        lookup_default='0', return_default='0', 
+-        picker_fn='first'
+-    )}}
+-),
+-lookup_b_dupe_max as (
+-    {{ dbt_utils.lookup_one(
+-        main_table='lookup_b_dupe_first', col_to_lookup='b_id_int',
+-        lookup_table=ref("b_dupe"), lookup_col='b_id_int',
+-        return_col='b_attr_int', rename_col='b_attr_int_max',
+-        lookup_default='0', return_default='0', 
+-        picker_fn='max'
+-    )}}
+-)
+-select * from lookup_b_dupe_max
+\ No newline at end of file
+diff --git a/integration_tests/models/dw/test_lookup_simple.sql b/integration_tests/models/dw/test_lookup_simple.sql
+deleted file mode 100644
+index 943bc3c..0000000
+--- a/integration_tests/models/dw/test_lookup_simple.sql
++++ /dev/null
+@@ -1,22 +0,0 @@
+-with fact as (
+-    {{ dbt_utils.stage_sql(ref("fact")) }}
+-),
+-lookup_dim_a as (
+-    {{ dbt_utils.lookup_one(
+-        main_table='fact', col_to_lookup='dim_a_id',
+-        lookup_table=ref("dim_a"), lookup_col='dim_a_id',
+-        return_col='dim_a_sk', rename_col='dim_a_sk',
+-        lookup_default='0', return_default='0', 
+-        picker_fn='min'
+-    )}}
+-),
+-lookup_dim_a2 as (
+-    {{ dbt_utils.lookup_one(
+-        main_table='lookup_dim_a', col_to_lookup='dim_a_id',
+-        lookup_table=ref("dim_a"), lookup_col='dim_a_id',
+-        return_col='dim_a_sk', rename_col='dim_a_sk_first',
+-        lookup_default='0', return_default='0', 
+-        picker_fn='first'
+-    )}}
+-)
+-select * from lookup_dim_a2
+\ No newline at end of file
+diff --git a/integration_tests/models/generic_tests/schema.yml b/integration_tests/models/generic_tests/schema.yml
+index b12e3c7..d43b183 100644
+--- a/integration_tests/models/generic_tests/schema.yml
++++ b/integration_tests/models/generic_tests/schema.yml
+@@ -261,3 +261,66 @@ models:
+           compare_model: ref('data_test_equality_a')
+           exclude_columns:
+             - col_c
++
++  - name: test_lookup_min
++    columns:
++      - name: dim_a_sk
++        tests:
++          - unique
++    data_tests:
++      - dbt_utils.equal_rowcount:
++          compare_model: ref('dim_a')
++ 
++  - name: test_lookup_max
++    columns:
++      - name: dim_a_sk
++        tests:
++          - unique
++    data_tests:
++      - dbt_utils.equal_rowcount:
++          compare_model: ref('dim_a')
++
++  - name: test_lookup_first
++    columns:
++      - name: dim_a_sk
++        tests:
++          - unique
++    data_tests:
++      - dbt_utils.equal_rowcount:
++          compare_model: ref('dim_a')
++
++  - name: test_lookup_2_first
++    columns:
++      - name: dim_a_sk
++        tests:
++          - unique
++    data_tests:
++      - dbt_utils.equal_rowcount:
++          compare_model: ref('dim_a')
++
++  - name: test_lookup_2_min
++    columns:
++      - name: dim_a_sk
++        tests:
++          - unique
++    data_tests:
++      - dbt_utils.equal_rowcount:
++          compare_model: ref('dim_a')
++
++  - name: test_lookup_2_max
++    columns:
++      - name: dim_a_sk
++        tests:
++          - unique
++    data_tests:
++      - dbt_utils.equal_rowcount:
++          compare_model: ref('dim_a')
++
++  - name: test_lookup_default
++    columns:
++      - name: dim_a_sk
++        tests:
++          - unique
++    data_tests:
++      - dbt_utils.equal_rowcount:
++          compare_model: ref('dim_a')
+diff --git a/integration_tests/models/web/schema.yml b/integration_tests/models/web/schema.yml
+deleted file mode 100644
+index 7f02b31..0000000
+--- a/integration_tests/models/web/schema.yml
++++ /dev/null
+@@ -1,20 +0,0 @@
+-version: 2
+-
+-models:
+-  - name: test_urls
+-    data_tests:
+-      - assert_equal:
+-          actual: actual
+-          expected: expected
+-          
+-  - name: test_url_host
+-    data_tests:
+-      - assert_equal:
+-          actual: actual
+-          expected: expected
+-          
+-  - name: test_url_path
+-    data_tests:
+-      - assert_equal:
+-          actual: actual
+-          expected: expected
+\ No newline at end of file
+diff --git a/macros/dw/lookup.sql b/macros/dw/lookup.sql
+index 26413dc..e2231db 100644
+--- a/macros/dw/lookup.sql
++++ b/macros/dw/lookup.sql
+@@ -14,24 +14,69 @@
+     Returns:
+         A SELECT statement that joins the main table with the lookup table and includes the specified columns.
+ #}
+-{%- macro lookup_one(main_table, col_to_lookup, lookup_table, lookup_col=col_to_lookup, return_col=lookup_col, rename_col=return_col, lookup_default="0", return_default="NULL", picker_fn="min") %}
++{%- macro lookup_one(main_table, col_to_lookup, lookup_table, lookup_col=col_to_lookup, return_col=None, rename_col=None, lookup_default="0", return_default="0", picker_fn="min") %}
+   {%- if not execute %}
+-        {{ return('') }}
+-  {% endif -%}
++  {{-   return('') }}
++  {%- endif -%}
++  {%- if not return_col %}
++  {%-   set return_col = col_to_lookup %}
++  {%- endif %}
++  {%- set new_return_col = return_col %}
++  {%- if return_col == col_to_lookup %}
++  {%-   set new_return_col = "_new_" ~ return_col %}
++  {%- endif %}
++
++    with lookup_table as (
++        SELECT
++            {{lookup_col}},
++            {%- if picker_fn == "first" %}{{return_col}},
++            row_number() over (partition by {{lookup_col}} order by {{return_col}}) = 1 as is_dedupe
++            {%- elif picker_fn == "string_agg"%}{{picker_fn}}({{return_col}}::text, ',') AS {{return_col}}
++            {%- else %}{{picker_fn}}({{return_col}}) AS {{new_return_col}}
++            {%- endif %}
++        FROM {{lookup_table}}
++        {% if picker_fn != "first" -%} group by {{lookup_col}}{% endif %}
++    )
++    SELECT
++        main_table.*,
++        COALESCE(lookup_table.{{new_return_col}}, {{return_default}}) AS {{rename_col}}
++    FROM
++        {{main_table}} AS main_table
++    LEFT JOIN lookup_table
++        {%- if lookup_default %}
++        ON coalesce(main_table.{{col_to_lookup}}, {{lookup_default}}) = lookup_table.{{lookup_col}}
++        {%- else %}
++        ON main_table.{{col_to_lookup}} = lookup_table.{{lookup_col}}
++        {%- endif %}
++        {% if picker_fn == "first" -%} and lookup_table.is_dedupe{% endif %}
++{% endmacro %}
++
++{%- macro lookup_many(main_table, col_to_lookup, lookup_table, lookup_col=col_to_lookup, return_col=None, rename_col=None, lookup_default="0", return_default="0", picker_fn="min") %}
++  {%- if not execute %}
++  {{-   return('') }}
++  {%- endif -%}
++  {%- if not return_col %}
++  {%-   set return_col = col_to_lookup %}
++  {%- endif %}
++  {%- set new_return_col = return_col %}
++  {%- if return_col == col_to_lookup %}
++  {%-   set new_return_col = "_new_" ~ return_col %}
++  {%- endif %}
++
+     with lookup_table as (
+         SELECT
+             {{lookup_col}},
+             {%- if picker_fn == "first" %}{{return_col}},
+             row_number() over (partition by {{lookup_col}} order by {{return_col}}) = 1 as is_dedupe
+             {%- elif picker_fn == "string_agg"%}{{picker_fn}}({{return_col}}::text, ',') AS {{return_col}}
+-            {%- else %}{{picker_fn}}({{return_col}}) AS {{return_col}}
++            {%- else %}{{picker_fn}}({{return_col}}) AS {{new_return_col}}
+             {%- endif %}
+         FROM {{lookup_table}}
+-        {% if picker_fn != "first" %}group by {{lookup_col}}{% endif %}
++        {% if picker_fn != "first" -%} group by {{lookup_col}}{% endif %}
+     )
+     SELECT
+         main_table.*,
+-        COALESCE(lookup_table.{{return_col}}, {{return_default}}) AS {% if return_col == lookup_col %} _new_{{rename_col}}{%- else %} {{rename_col}}{%- endif %}
++        COALESCE(lookup_table.{{new_return_col}}, {{return_default}}) AS {{rename_col}}
+     FROM
+         {{main_table}} AS main_table
+     LEFT JOIN lookup_table
+@@ -40,11 +85,14 @@
+         {%- else %}
+         ON main_table.{{col_to_lookup}} = lookup_table.{{lookup_col}}
+         {%- endif %}
+-    {% if picker_fn == "first" %}where lookup_table.is_dedupe{% endif %}
++        {% if picker_fn == "first" -%} and lookup_table.is_dedupe{% endif %}
+ {% endmacro %}
+ 
+ 
+ {%- macro lookup_dim_key(main_table, col_to_lookup, lookup_table, lookup_col=col_to_lookup, return_col=lookup_col, rename_col=return_col, lookup_default="0", return_default="NULL", picker_fn="min") %}
++  {%-  if not execute %}
++  {{     return('') }}
++  {%   endif -%}
+ {{- debug("lookup_dim_key--------") }}
+ {%- set same_name_prefix = "_new_" %}
+ {#- Set default lookup_col to be same as col_to_lookup for convenience #}
+@@ -145,11 +193,11 @@
+ {%-   if not loop.last %} AND {% endif %}
+ {%- endfor %}
+ {%- if picker_fn == "first" %}
+-    where is_dedupe
++    and lookup_table.is_dedupe
+ {%- else %}
+ {%- endif %}
+ {%- endmacro %}
+ 
+ {%- macro lookup_return_many_cols(main_table, col_to_lookup, lookup_table, lookup_col, return_col, rename_col, lookup_default="0", return_default="NULL", picker_fn="min") %}
+-{{- lookup_dim_key(main_table=main_table, col_to_lookup=col_to_lookup, lookup_table=lookup_table, lookup_col=lookup_col, return_col=return_col, rename_col=rename_col, lookup_default=lookup_default, return_default=return_default, picker_fn=picker_fn) }}
++{{- dbt_utils.lookup_dim_key(main_table=main_table, col_to_lookup=col_to_lookup, lookup_table=lookup_table, lookup_col=lookup_col, return_col=return_col, rename_col=rename_col, lookup_default=lookup_default, return_default=return_default, picker_fn=picker_fn) }}
+ {%- endmacro %}
+diff --git a/macros/web/get_url_host.md b/macros/web/get_url_host.md
+new file mode 100644
+index 0000000..62f2f76
+--- /dev/null
++++ b/macros/web/get_url_host.md
+@@ -0,0 +1,27 @@
++{% docs get_url_host %}
++This macro extracts the host (domain) from a URL string.
++
++get_url_host ([source](get_url_host.sql))
++
++
++### Example Usage
++
++```sql
++select
++    {{ dbt_utils.get_url_host('url') }} as host
++from {{ ref('data_urls') }}
++```
++
++### Integration Tests
++Located in `integration_tests/`:
++* Data: `data/web/data_urls.csv` - Sample URLs with various domain formats
++* Model: `models/web/test_url_host.sql` - Tests domain extraction
++* Schema: `models/web/schema.yml` - Validates extracted domains
++
++### Test Cases
++1. HTTP URLs: `http://example.com/path`
++2. HTTPS URLs: `https://example.com/path`
++3. Android app URLs: `android-app://example.com/path`
++4. URLs with query parameters: `example.com/path?param=value`
++
++{% enddocs %}
+diff --git a/macros/web/get_url_parameter.md b/macros/web/get_url_parameter.md
+new file mode 100644
+index 0000000..39ff87c
+--- /dev/null
++++ b/macros/web/get_url_parameter.md
+@@ -0,0 +1,26 @@
++{% docs get_url_parameter %}
++
++This macro extracts the value of a specified URL parameter from a URL string.
++
++### Returns
++* String value of the specified parameter, or NULL if the parameter is not found
++
++### Example Usage
++
++```sql
++select
++    {{ dbt_utils.get_url_parameter('url', 'utm_medium') }} as utm_medium
++from {{ ref('data_urls') }}
++```
++
++### Integration Tests
++Located in `integration_tests/`:
++* Data: `data/web/data_urls.csv` - Sample URLs with UTM parameters
++* Model: `models/web/test_urls.sql` - Tests parameter extraction
++* Schema: `models/web/schema.yml` - Validates extracted values
++
++### Test Cases
++1. Single parameter extraction: `utm_medium=organic`
++2. Multiple parameter handling: `utm_medium=organic&utm_source=github`
++3. Missing parameter handling: Returns NULL
++{% enddocs %}
+diff --git a/macros/web/get_url_path.md b/macros/web/get_url_path.md
+new file mode 100644
+index 0000000..a3385e0
+--- /dev/null
++++ b/macros/web/get_url_path.md
+@@ -0,0 +1,25 @@
++{% docs get_url_path %}
++
++Extracts the path from a URL string.
++
++### Usage
++```sql
++select
++    {{ dbt_utils.get_url_path('url') }} as path
++from {{ ref('data_urls') }}
++```
++
++### Returns
++Returns the path portion of the URL.
++
++### Examples
++
++```sql
++-- Example 1: Extracts the path from a URL
++select
++    {{ dbt_utils.get_url_path('url') }} as path
++from {{ ref('data_urls') }}
++```
++
++
++{% enddocs %}
+diff --git a/macros/web/schema.yml b/macros/web/schema.yml
+new file mode 100644
+index 0000000..4808ff4
+--- /dev/null
++++ b/macros/web/schema.yml
+@@ -0,0 +1,26 @@
++version: 2
++
++macros:
++  - name: get_url_parameter
++    description: '{{ doc("get_url_parameter") }}'
++    arguments:
++      - name: url
++        type: string
++        description: The URL string to parse
++      - name: parameter_name
++        type: string
++        description: The name of the parameter to extract from the URL
++
++  - name: get_url_host
++    description: '{{ doc("get_url_host") }}'
++    arguments:
++      - name: url
++        type: string
++        description: The URL string to parse
++
++  - name: get_url_path
++    description: '{{ doc("get_url_path") }}'
++    arguments:
++      - name: url
++        type: string
++        description: The URL string to parse
+diff --git a/run_functional_test.sh b/run_functional_test.sh
+deleted file mode 100755
+index 172d5ae..0000000
+--- a/run_functional_test.sh
++++ /dev/null
+@@ -1,3 +0,0 @@
+-#!/bin/bash
+-
+-python3 -m pytest tests/functional -n4 --profile $1
+diff --git a/run_test.sh b/run_test.sh
+index 95ef9a3..0ff0cf5 100755
+--- a/run_test.sh
++++ b/run_test.sh
+@@ -1,4 +1,5 @@
+ #!/bin/bash
++# run_test.sh postgres|snowflake|bigquery
+ 
+ # Show location of local install of dbt
+ echo $(which dbt)
