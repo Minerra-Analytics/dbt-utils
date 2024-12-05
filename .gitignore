@@ -18,3 +18,5 @@ env*/
 
 # But explicitly ignore test.env files
 test.env
+.vscode/
+.code-workspace
