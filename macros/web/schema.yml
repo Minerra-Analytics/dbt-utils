@@ -1,0 +1,26 @@
+version: 2
+
+macros:
+  - name: get_url_parameter
+    description: '{{ doc("get_url_parameter") }}'
+    arguments:
+      - name: url
+        type: string
+        description: The URL string to parse
+      - name: parameter_name
+        type: string
+        description: The name of the parameter to extract from the URL
+
+  - name: get_url_host
+    description: '{{ doc("get_url_host") }}'
+    arguments:
+      - name: url
+        type: string
+        description: The URL string to parse
+
+  - name: get_url_path
+    description: '{{ doc("get_url_path") }}'
+    arguments:
+      - name: url
+        type: string
+        description: The URL string to parse
