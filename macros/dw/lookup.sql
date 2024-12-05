@@ -14,24 +14,32 @@
     Returns:
         A SELECT statement that joins the main table with the lookup table and includes the specified columns.
 #}
-{%- macro lookup_one(main_table, col_to_lookup, lookup_table, lookup_col=col_to_lookup, return_col=lookup_col, rename_col=return_col, lookup_default="0", return_default="NULL", picker_fn="min") %}
+{%- macro lookup_one(main_table, col_to_lookup, lookup_table, lookup_col=col_to_lookup, return_col=None, rename_col=None, lookup_default="0", return_default="0", picker_fn="min") %}
   {%- if not execute %}
-        {{ return('') }}
-  {% endif -%}
+  {{-   return('') }}
+  {%- endif -%}
+  {%- if not return_col %}
+  {%-   set return_col = col_to_lookup %}
+  {%- endif %}
+  {%- set new_return_col = return_col %}
+  {%- if return_col == col_to_lookup %}
+  {%-   set new_return_col = "_new_" ~ return_col %}
+  {%- endif %}
+
     with lookup_table as (
         SELECT
             {{lookup_col}},
             {%- if picker_fn == "first" %}{{return_col}},
             row_number() over (partition by {{lookup_col}} order by {{return_col}}) = 1 as is_dedupe
             {%- elif picker_fn == "string_agg"%}{{picker_fn}}({{return_col}}::text, ',') AS {{return_col}}
-            {%- else %}{{picker_fn}}({{return_col}}) AS {{return_col}}
+            {%- else %}{{picker_fn}}({{return_col}}) AS {{new_return_col}}
             {%- endif %}
         FROM {{lookup_table}}
-        {% if picker_fn != "first" %}group by {{lookup_col}}{% endif %}
+        {% if picker_fn != "first" -%} group by {{lookup_col}}{% endif %}
     )
     SELECT
         main_table.*,
-        COALESCE(lookup_table.{{return_col}}, {{return_default}}) AS {% if return_col == lookup_col %} _new_{{rename_col}}{%- else %} {{rename_col}}{%- endif %}
+        COALESCE(lookup_table.{{new_return_col}}, {{return_default}}) AS {{rename_col}}
     FROM
         {{main_table}} AS main_table
     LEFT JOIN lookup_table
@@ -40,11 +48,51 @@
         {%- else %}
         ON main_table.{{col_to_lookup}} = lookup_table.{{lookup_col}}
         {%- endif %}
-    {% if picker_fn == "first" %}where lookup_table.is_dedupe{% endif %}
+        {% if picker_fn == "first" -%} and lookup_table.is_dedupe{% endif %}
+{% endmacro %}
+
+{%- macro lookup_many(main_table, col_to_lookup, lookup_table, lookup_col=col_to_lookup, return_col=None, rename_col=None, lookup_default="0", return_default="0", picker_fn="min") %}
+  {%- if not execute %}
+  {{-   return('') }}
+  {%- endif -%}
+  {%- if not return_col %}
+  {%-   set return_col = col_to_lookup %}
+  {%- endif %}
+  {%- set new_return_col = return_col %}
+  {%- if return_col == col_to_lookup %}
+  {%-   set new_return_col = "_new_" ~ return_col %}
+  {%- endif %}
+
+    with lookup_table as (
+        SELECT
+            {{lookup_col}},
+            {%- if picker_fn == "first" %}{{return_col}},
+            row_number() over (partition by {{lookup_col}} order by {{return_col}}) = 1 as is_dedupe
+            {%- elif picker_fn == "string_agg"%}{{picker_fn}}({{return_col}}::text, ',') AS {{return_col}}
+            {%- else %}{{picker_fn}}({{return_col}}) AS {{new_return_col}}
+            {%- endif %}
+        FROM {{lookup_table}}
+        {% if picker_fn != "first" -%} group by {{lookup_col}}{% endif %}
+    )
+    SELECT
+        main_table.*,
+        COALESCE(lookup_table.{{new_return_col}}, {{return_default}}) AS {{rename_col}}
+    FROM
+        {{main_table}} AS main_table
+    LEFT JOIN lookup_table
+        {%- if lookup_default %}
+        ON coalesce(main_table.{{col_to_lookup}}, {{lookup_default}}) = lookup_table.{{lookup_col}}
+        {%- else %}
+        ON main_table.{{col_to_lookup}} = lookup_table.{{lookup_col}}
+        {%- endif %}
+        {% if picker_fn == "first" -%} and lookup_table.is_dedupe{% endif %}
 {% endmacro %}
 
 
 {%- macro lookup_dim_key(main_table, col_to_lookup, lookup_table, lookup_col=col_to_lookup, return_col=lookup_col, rename_col=return_col, lookup_default="0", return_default="NULL", picker_fn="min") %}
+  {%-  if not execute %}
+  {{     return('') }}
+  {%   endif -%}
 {{- debug("lookup_dim_key--------") }}
 {%- set same_name_prefix = "_new_" %}
 {#- Set default lookup_col to be same as col_to_lookup for convenience #}
@@ -145,11 +193,11 @@
 {%-   if not loop.last %} AND {% endif %}
 {%- endfor %}
 {%- if picker_fn == "first" %}
-    where is_dedupe
+    and lookup_table.is_dedupe
 {%- else %}
 {%- endif %}
 {%- endmacro %}
 
 {%- macro lookup_return_many_cols(main_table, col_to_lookup, lookup_table, lookup_col, return_col, rename_col, lookup_default="0", return_default="NULL", picker_fn="min") %}
-{{- lookup_dim_key(main_table=main_table, col_to_lookup=col_to_lookup, lookup_table=lookup_table, lookup_col=lookup_col, return_col=return_col, rename_col=rename_col, lookup_default=lookup_default, return_default=return_default, picker_fn=picker_fn) }}
+{{- dbt_utils.lookup_dim_key(main_table=main_table, col_to_lookup=col_to_lookup, lookup_table=lookup_table, lookup_col=lookup_col, return_col=return_col, rename_col=rename_col, lookup_default=lookup_default, return_default=return_default, picker_fn=picker_fn) }}
 {%- endmacro %}

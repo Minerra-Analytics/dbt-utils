@@ -8,3 +8,4 @@ dbt-snowflake@git+https://github.com/dbt-labs/dbt-snowflake.git
 dbt-bigquery@git+https://github.com/dbt-labs/dbt-bigquery.git
 pytest-xdist
 tox>=3.13
+shandy-sqlfmt[jinja]

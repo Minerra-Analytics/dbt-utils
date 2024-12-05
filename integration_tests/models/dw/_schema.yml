@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: test_lookup_one_row
+    columns:
+      - name: dim_a_sk
+        data_type: integer
+        data_tests:
+          - unique
+          - not_null
+      - name: dim_a_id
+        data_type: integer
+      - name: a_id
+        data_type: integer
+      - name: dim_attr_int
+        data_type: integer
+      - name: dim_attr_string
+        data_type: text
+      - name: dim_str_date
+        data_type: date
+      - name: b_id_int
+        data_type: integer
+      - name: c_id_string
+        data_type: text
+      - name: d_id_date
+        data_type: date
+      - name: b_attr_int_min
+        data_type: integer
+      - name: b_attr_int_first
+        data_type: integer
+      - name: b_attr_int_max
+        data_type: integer
+  - name: test_lookup_simple
+    columns: []
+  - name: test_stage_sql_except
+    columns: []
+  - name: test_stage_sql
+    columns: []
