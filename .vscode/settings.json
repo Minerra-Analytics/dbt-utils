@@ -45,15 +45,6 @@
         "editor.tabSize": 4,
         "editor.insertSpaces": true
     },
-    "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[json]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
     "[yaml]": {
         "editor.tabSize": 2,
         "editor.insertSpaces": true
