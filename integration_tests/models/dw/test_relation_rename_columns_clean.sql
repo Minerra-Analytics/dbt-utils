@@ -1,6 +1,6 @@
 -- test8
 with
-{{- dbt_utils.relation_rename_columns(ref("dim_a"), clean=true) }},
+    {{- dbt_utils.relation_rename_columns(ref("dim_a"), clean=true) }},
     rename as (
         select
             "dim_a_sk",
