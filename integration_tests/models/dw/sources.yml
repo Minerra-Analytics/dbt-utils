@@ -1,0 +1,7 @@
+version: 2
+
+sources:
+  - name: dw_sources
+    schema: dbt_utils_integration_tests_postgres
+    tables:
+      - name: dim_a

@@ -1,5 +1,6 @@
--- test3
-{{ dbt_utils.base_cte(ref("dim_a"), clean=true) }},
+-- test8
+with
+{{- dbt_utils.relation_rename_columns(ref("dim_a"), clean=true) }},
     rename as (
         select
             "dim_a_sk",
