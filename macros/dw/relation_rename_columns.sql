@@ -86,6 +86,10 @@
     cte_name="base"
 ) %}
 
+{%- if not execute %}
+    {{- return('') }}
+{%- endif %}
+
 {%- set tabwidth = 4 %}
 {%- set indent_level = 3 %}
 {%- set indent = " " * indent_level * tabwidth %}
@@ -103,6 +107,7 @@ with
     )
 {%- if clean %}
 -- clean: {{clean}}: No template generated
+{{ "" }}
 {%- else -%}
     ,
     -- clean: {{clean}}: Template generated
