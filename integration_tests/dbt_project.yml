@@ -11,6 +11,14 @@ config-version: 2
 # Variables
 vars:
   DEBUG: true
+  # Min and Max date constants
+  min_timestamp: "1900-01-01 00:00:00"
+  max_timestamp: "9999-01-01 00:00:00"
+  # Used by unknown() macro
+  unknown_number: "0"
+  unknown_string: "''"
+  unknown_date: "'9999-01-01'"
+  unknown_hash_key: "_dbt_utils_surrogate_key_null_"
 
 model-paths: ["models"]
 analysis-paths: ["analysis"]

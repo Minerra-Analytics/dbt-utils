@@ -2,15 +2,15 @@
 {#- ----------------------------------------------------------------------------------------------------------
     This macro performs a lookup operation between two tables based on a specified column.
     It returns only one value of the return column and renames it as specified.
-    
+
     Parameters:
-        - main_table: The name of the main table to perform the lookup on.
+        - main_table: The name of the CTE or relation object to perform the lookup from.
         - col_to_lookup: The column in the main table to use for the lookup.
-        - lookup_table: The name of the lookup table.
+        - lookup_table: The name of the lookup CTE or relation object.
         - lookup_col: The column in the lookup table to match with the main table's column.
         - return_col: The column in the lookup table to return as the result of the lookup.
         - rename_col: The name to assign to the returned column in the main table.
-    
+
     Returns:
         A SELECT statement that joins the main table with the lookup table and includes the specified columns.
 #}
@@ -99,16 +99,16 @@
 {%- if not lookup_col %}{%- set lookup_col = col_to_lookup %}{%- endif %}
 {#- Set default rename_col to be same as return_col for convenience #}
 {%- if not rename_col %}{%- set rename_col = return_col %}{%- endif %}
-{{- 
+{{-
   debug(
     "main_table: " ~ main_table ~ " " ~
-    "\ncol_to_lookup: " ~ col_to_lookup ~ " " ~  
+    "\ncol_to_lookup: " ~ col_to_lookup ~ " " ~
     "\nlookup_table: " ~ lookup_table ~ " " ~
     "\nlookup_col: " ~ lookup_col ~ " " ~
     "\nreturn_col: " ~ return_col ~ " " ~
     "\nrename_col: " ~ rename_col ~ " " ~
     "\nreturn_default: " ~ return_default
-    ,info=True) 
+    ,info=True)
 }}
   /*
   This query performs a lookup of {{col_to_lookup}} in "{{main_table}}" table or CTE from the "{{lookup_table}}" table and returning the minimum value of "{{return_col}}" for each of {{lookup_col}}.
@@ -154,13 +154,13 @@
 {%-   if not loop.last %}, {% endif %}
 {%- endfor %},
 {%- if picker_fn == "first" %}
-        row_number() over ( partition by 
-{%-   for lookup_col in lookup_cols %} 
+        row_number() over ( partition by
+{%-   for lookup_col in lookup_cols %}
         {{-" "}}{{lookup_col}}
 {%-     if not loop.last %},{%endif%}
-{%-   endfor %} 
-        {{-" "}}order by 
-{%-   for return_col in return_col_list %} 
+{%-   endfor %}
+        {{-" "}}order by
+{%-   for return_col in return_col_list %}
         {{-" "}}{{return_col}}
 {%-     if not loop.last %},{%endif%}
 {%-   endfor -%}
@@ -186,9 +186,9 @@
 {%-   endfor %}
 {%- endif %}
   ) AS lookup_table
-    ON 
+    ON
 {%- for col_to_lookup, lookup_col, default in zip(cols_to_lookup, lookup_cols, lookup_default) %}
-    COALESCE(main_table.{{col_to_lookup}}, {{default}}) = lookup_table.{{lookup_col}} 
+    COALESCE(main_table.{{col_to_lookup}}, {{default}}) = lookup_table.{{lookup_col}}
     {# main_table.{{col_to_lookup}} = lookup_table.{{lookup_col}} #}
 {%-   if not loop.last %} AND {% endif %}
 {%- endfor %}

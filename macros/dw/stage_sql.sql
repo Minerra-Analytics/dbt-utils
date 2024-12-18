@@ -5,13 +5,13 @@
  This macro generates a SQL query to select all columns from a specified stage table.
 
  Parameters:
-  - stage_name: The name of the stage table.
+  - relation: A relation object.
   - except: A list of columns to exclude from the selection.
 
  Returns:
   A SQL query that selects all columns from the specified stage table, excluding the columns specified in the 'except' parameter.
 #}
-{%- macro stage_sql(stage_name, except=[]) -%}
+{%- macro stage_sql(relation, except=[]) -%}
 {%- if not execute %}
     {{- return('') }}
 {%- endif %}
@@ -19,6 +19,6 @@
 {{- debug("stage_sql() - execute:" ~ execute, info=True) }}
 {%- set indent = ' ' * 8 %}
 {{ indent }}select
-                {{- dbt_utils.star(stage_name, except=except, indent=' ' * 12) }}
-{{ indent }}from {{ stage_name }}
+                {{- dbt_utils.star(relation, except=except, indent=' ' * 12) }}
+{{ indent }}from {{ relation }}
 {%- endmacro %}
