@@ -33,7 +33,7 @@
             {%- else -%}
                 {{- col|trim }} {%- if prefix!='' or suffix!='' %} as {{ (prefix ~ col ~ suffix)|trim }} {%- endif -%}
             {% endif -%}
-            {%- if not loop.last %},{% endif -%}
+            {%- if not loop.last %},{{"\n" ~ indent}}{% endif -%}
         {%- endfor -%}
     {% endif %}
 {%- endmacro %}

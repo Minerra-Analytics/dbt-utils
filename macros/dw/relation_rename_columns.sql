@@ -102,7 +102,7 @@ with
     {{ cte_name }} as (
         select
             -- Table: {{ base_name }} columns
-{{-indent}}{{ dbt_utils.star(relation, indent=indent) }}
+{{indent}}{{ dbt_utils.star(relation, indent=indent) }}
         from {{ relation }}
     )
 {%- if clean %}
