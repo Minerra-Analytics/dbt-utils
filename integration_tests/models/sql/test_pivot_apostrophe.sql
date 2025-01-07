@@ -11,7 +11,7 @@
 
 select
     size,
-    {{ dbt_utils.pivot('color', column_values, cmp=cmp, quote_identifiers=False) }}
+    {{ dwa.pivot('color', column_values, cmp=cmp, quote_identifiers=False) }}
 
 from {{ ref('data_pivot') }}
 group by size

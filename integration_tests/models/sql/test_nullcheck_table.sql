@@ -1,13 +1,13 @@
 {{ config( materialized = "table" ) }}
- 
+
 -- TO DO: remove if-statement
- 
+
 {% set tbl = ref('data_nullcheck_table') %}
 
 
 with nulled as (
 
-    {{ dbt_utils.nullcheck_table(tbl) }}
+    {{ dwa.nullcheck_table(tbl) }}
 
 )
 

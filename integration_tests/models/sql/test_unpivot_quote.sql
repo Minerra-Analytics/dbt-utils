@@ -1,5 +1,5 @@
 
-    {{ dbt_utils.unpivot(
+    {{ dwa.unpivot(
         relation=ref('data_unpivot_quote'),
         cast_to=type_string(),
         exclude=['Customer_Id', 'Created_At'],

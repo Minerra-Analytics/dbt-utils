@@ -8,7 +8,7 @@ get_url_host ([source](get_url_host.sql))
 
 ```sql
 select
-    {{ dbt_utils.get_url_host('url') }} as host
+    {{ dwa.get_url_host('url') }} as host
 from {{ ref('data_urls') }}
 ```
 

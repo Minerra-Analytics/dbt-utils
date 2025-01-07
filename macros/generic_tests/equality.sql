@@ -1,5 +1,5 @@
 {% test equality(model, compare_model, compare_columns=None, exclude_columns=None, precision = None) %}
-  {{ return(adapter.dispatch('test_equality', 'dbt_utils')(model, compare_model, compare_columns, exclude_columns, precision)) }}
+  {{ return(adapter.dispatch('test_equality', 'dwa')(model, compare_model, compare_columns, exclude_columns, precision)) }}
 {% endtest %}
 
 {% macro default__test_equality(model, compare_model, compare_columns=None, exclude_columns=None, precision = None) %}
@@ -26,12 +26,12 @@
 
 
 -- setup
-{%- do dbt_utils._is_relation(model, 'test_equality') -%}
+{%- do dwa._is_relation(model, 'test_equality') -%}
 
 {# Ensure there are no extra columns in the compare_model vs model #}
 {%- if not compare_columns -%}
-    {%- do dbt_utils._is_ephemeral(model, 'test_equality') -%}
-    {%- do dbt_utils._is_ephemeral(compare_model, 'test_equality') -%}
+    {%- do dwa._is_ephemeral(model, 'test_equality') -%}
+    {%- do dwa._is_ephemeral(compare_model, 'test_equality') -%}
 
     {%- set model_columns = adapter.get_columns_in_relation(model) -%}
     {%- set compare_model_columns = adapter.get_columns_in_relation(compare_model) -%}
@@ -71,11 +71,11 @@
 
 {%- if not precision -%}
     {%- if not compare_columns -%}
-        {# 
+        {#
             You cannot get the columns in an ephemeral model (due to not existing in the information schema),
             so if the user does not provide an explicit list of columns we must error in the case it is ephemeral
         #}
-        {%- do dbt_utils._is_ephemeral(model, 'test_equality') -%}
+        {%- do dwa._is_ephemeral(model, 'test_equality') -%}
         {%- set compare_columns = adapter.get_columns_in_relation(model)-%}
 
         {%- if exclude_columns -%}
@@ -102,7 +102,7 @@
     {#-
         If rounding is required, we need to get the types, so it cannot be ephemeral even if they provide column names
     -#}
-    {%- do dbt_utils._is_ephemeral(model, 'test_equality') -%}
+    {%- do dwa._is_ephemeral(model, 'test_equality') -%}
     {%- set columns = adapter.get_columns_in_relation(model) -%}
 
     {% set columns_list = [] %}

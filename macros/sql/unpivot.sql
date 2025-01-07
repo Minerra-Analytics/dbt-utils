@@ -13,7 +13,7 @@ Arguments:
 #}
 
 {% macro unpivot(relation=none, cast_to='varchar', exclude=none, remove=none, field_name='field_name', value_name='value', quote_identifiers=False) -%}
-    {{ return(adapter.dispatch('unpivot', 'dbt_utils')(relation, cast_to, exclude, remove, field_name, value_name, quote_identifiers)) }}
+    {{ return(adapter.dispatch('unpivot', 'dwa')(relation, cast_to, exclude, remove, field_name, value_name, quote_identifiers)) }}
 {% endmacro %}
 
 {% macro default__unpivot(relation=none, cast_to='varchar', exclude=none, remove=none, field_name='field_name', value_name='value', quote_identifiers=False) -%}
@@ -31,8 +31,8 @@ Arguments:
 
   {%- do table_columns.update({relation: []}) %}
 
-  {%- do dbt_utils._is_relation(relation, 'unpivot') -%}
-  {%- do dbt_utils._is_ephemeral(relation, 'unpivot') -%}
+  {%- do dwa._is_relation(relation, 'unpivot') -%}
+  {%- do dwa._is_ephemeral(relation, 'unpivot') -%}
   {%- set cols = adapter.get_columns_in_relation(relation) %}
 
   {%- for col in cols -%}

@@ -1,8 +1,8 @@
 {#
     This macro is copied and slightly edited from the dbt_expectations package.
     At the time of this addition, dbt_expectations couldn't be added because
-    integration_tests is installing dbt_utils from local without a hard-coded
-    path. dbt is not able to resolve duplicate dependencies of dbt_utils
+    integration_tests is installing dwalocal without a hard-coded
+    path. dbt is not able to resolve duplicate dependencies of dwa
     due to this.
 #}
 

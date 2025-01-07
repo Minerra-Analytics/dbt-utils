@@ -1,16 +1,16 @@
 {% test not_empty_string(model, column_name, trim_whitespace=true) %}
 
-  {{ return(adapter.dispatch('test_not_empty_string', 'dbt_utils')(model, column_name, trim_whitespace)) }}
+  {{ return(adapter.dispatch('test_not_empty_string', 'dwa')(model, column_name, trim_whitespace)) }}
 
 {% endtest %}
 
 {% macro default__test_not_empty_string(model, column_name, trim_whitespace=true) %}
 
     with
-    
+
     all_values as (
 
-        select 
+        select
 
 
             {% if trim_whitespace == true -%}
@@ -22,7 +22,7 @@
                 {{ column_name }}
 
             {%- endif %}
-            
+
         from {{ model }}
 
     ),

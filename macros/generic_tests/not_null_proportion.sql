@@ -1,5 +1,5 @@
 {% macro test_not_null_proportion(model, group_by_columns = []) %}
-  {{ return(adapter.dispatch('test_not_null_proportion', 'dbt_utils')(model, group_by_columns, **kwargs)) }}
+  {{ return(adapter.dispatch('test_not_null_proportion', 'dwa')(model, group_by_columns, **kwargs)) }}
 {% endmacro %}
 
 {% macro default__test_not_null_proportion(model, group_by_columns) %}

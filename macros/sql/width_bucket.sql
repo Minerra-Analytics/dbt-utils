@@ -1,5 +1,5 @@
 {% macro width_bucket(expr, min_value, max_value, num_buckets) %}
-  {{ return(adapter.dispatch('width_bucket', 'dbt_utils') (expr, min_value, max_value, num_buckets)) }}
+  {{ return(adapter.dispatch('width_bucket', 'dwa') (expr, min_value, max_value, num_buckets)) }}
 {% endmacro %}
 
 

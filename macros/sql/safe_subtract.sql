@@ -1,5 +1,5 @@
 {%- macro safe_subtract(field_list) -%}
-    {{ return(adapter.dispatch('safe_subtract', 'dbt_utils')(field_list)) }}
+    {{ return(adapter.dispatch('safe_subtract', 'dwa')(field_list)) }}
 {% endmacro %}
 
 {%- macro default__safe_subtract(field_list) -%}

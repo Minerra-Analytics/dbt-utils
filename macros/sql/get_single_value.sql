@@ -1,5 +1,5 @@
 {% macro get_single_value(query, default=none) %}
-    {{ return(adapter.dispatch('get_single_value', 'dbt_utils')(query, default)) }}
+    {{ return(adapter.dispatch('get_single_value', 'dwary, default)) }}
 {% endmacro %}
 
 {% macro default__get_single_value(query, default) %}
@@ -21,11 +21,11 @@
         {% else %}
             {% set sql_result = r[0] %}
         {% endif %}
-        
+
     {%- else -%}
-    
+
         {% set sql_result = default %}
-    
+
     {%- endif -%}
 
     {% do return(sql_result) %}

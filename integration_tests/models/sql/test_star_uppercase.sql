@@ -4,7 +4,7 @@
 with data as (
 
     select
-        {{ dbt_utils.star(from=ref('data_star'), except=[exclude_field]) }}
+        {{ dwa.star(from=ref('data_star'), except=[exclude_field]) }}
 
     from {{ ref('data_star') }}
 

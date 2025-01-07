@@ -1,7 +1,7 @@
 {
   "folders": [
     {
-      "name": "dbt_utils",
+      "name": "dwa",
       "path": "."
     },
     // Example of additional folders

@@ -1,5 +1,5 @@
 
-name: 'dbt_utils_integration_tests'
+name: 'dwa_integration_tests'
 version: '1.0'
 
 profile: 'integration_tests'
@@ -25,13 +25,13 @@ flags:
     use_colors: True
 
 dispatch:
-  - macro_namespace: 'dbt_utils'
-    search_order: ['dbt_utils_integration_tests', 'dbt_utils']
+  - macro_namespace: 'dwa'
+    search_order: ['dwa_integration_tests', 'dwa']
 
 seeds:
 
   +quote_columns: false
-  dbt_utils_integration_tests:
+  dwa_integration_tests:
 
     sql:
       data_events_20180103:
@@ -52,7 +52,7 @@ seeds:
           num_buckets: integer
           min_value: float
           max_value: float
-      
+
       data_unpivot_quote:
         +quote_columns: true
 

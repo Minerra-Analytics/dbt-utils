@@ -1,5 +1,5 @@
 {% test recency(model, field, datepart, interval, ignore_time_component=False, group_by_columns = []) %}
-  {{ return(adapter.dispatch('test_recency', 'dbt_utils')(model, field, datepart, interval, ignore_time_component, group_by_columns)) }}
+  {{ return(adapter.dispatch('test_recency', 'dwa')(model, field, datepart, interval, ignore_time_component, group_by_columns)) }}
 {% endtest %}
 
 {% macro default__test_recency(model, field, datepart, interval, ignore_time_component, group_by_columns) %}
@@ -14,7 +14,7 @@
 
 with recency as (
 
-    select 
+    select
 
       {{ select_gb_cols }}
       {% if ignore_time_component %}

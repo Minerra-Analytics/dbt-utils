@@ -14,7 +14,7 @@ Example:
 
     select
       size,
-      {{ dbt_utils.pivot('color', dbt_utils.get_column_values('public.test',
+      {{ dwa.pivot('color', dwa.get_column_values('public.test',
                                                               'color')) }}
     from public.test
     group by size
@@ -51,7 +51,7 @@ Arguments:
                else_value=0,
                quote_identifiers=True,
                distinct=False) %}
-    {{ return(adapter.dispatch('pivot', 'dbt_utils')(column, values, alias, agg, cmp, prefix, suffix, then_value, else_value, quote_identifiers, distinct)) }}
+    {{ return(adapter.dispatch('pivot', 'dwa')(column, values, alias, agg, cmp, prefix, suffix, then_value, else_value, quote_identifiers, distinct)) }}
 {% endmacro %}
 
 {% macro default__pivot(column,
@@ -78,7 +78,7 @@ Arguments:
       {% if quote_identifiers %}
             as {{ adapter.quote(prefix ~ value ~ suffix) }}
       {% else %}
-        as {{ dbt_utils.slugify(prefix ~ value ~ suffix) }}
+        as {{ dwa.slugify(prefix ~ value ~ suffix) }}
       {% endif %}
     {% endif %}
     {% if not loop.last %},{% endif %}

@@ -11,7 +11,7 @@ The arguments should be float type.
 {%- endmacro %}
 
 {% macro haversine_distance(lat1, lon1, lat2, lon2, unit='mi') -%}
-    {{ return(adapter.dispatch('haversine_distance', 'dbt_utils')(lat1,lon1,lat2,lon2,unit)) }}
+    {{ return(adapter.dispatch('haversine_distance', 'dwa')(lat1,lon1,lat2,lon2,unit)) }}
 {% endmacro %}
 
 {% macro default__haversine_distance(lat1, lon1, lat2, lon2, unit='mi') -%}
@@ -32,10 +32,10 @@ The arguments should be float type.
 
 
 {% macro bigquery__haversine_distance(lat1, lon1, lat2, lon2, unit='mi') -%}
-{% set radians_lat1 = dbt_utils.degrees_to_radians(lat1) %}
-{% set radians_lat2 = dbt_utils.degrees_to_radians(lat2) %}
-{% set radians_lon1 = dbt_utils.degrees_to_radians(lon1) %}
-{% set radians_lon2 = dbt_utils.degrees_to_radians(lon2) %}
+{% set radians_lat1 = dwa.degrees_to_radians(lat1) %}
+{% set radians_lat2 = dwa.degrees_to_radians(lat2) %}
+{% set radians_lon1 = dwa.degrees_to_radians(lon1) %}
+{% set radians_lon2 = dwa.degrees_to_radians(lon2) %}
 {%- if unit == 'mi' %}
     {% set conversion_rate = 1 %}
 {% elif unit == 'km' %}
@@ -48,4 +48,3 @@ The arguments should be float type.
     power(sin(({{ radians_lon2 }} - {{ radians_lon1 }}) / 2), 2))) * {{ conversion_rate }}
 
 {%- endmacro %}
-

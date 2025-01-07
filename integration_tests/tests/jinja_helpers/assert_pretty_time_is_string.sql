@@ -1,4 +1,4 @@
-{% if dbt_utils.pretty_time() is string %}
+{% if dway_time() is string %}
     {# Return 0 rows for the test to pass #}
     select 1 as col_name {{ limit_zero() }}
 {% else %}

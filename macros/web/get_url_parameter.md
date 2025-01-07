@@ -9,7 +9,7 @@ This macro extracts the value of a specified URL parameter from a URL string.
 
 ```sql
 select
-    {{ dbt_utils.get_url_parameter('url', 'utm_medium') }} as utm_medium
+    {{ dwa.get_url_parameter('url', 'utm_medium') }} as utm_medium
 from {{ ref('data_urls') }}
 ```
 

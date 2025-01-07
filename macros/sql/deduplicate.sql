@@ -1,5 +1,5 @@
 {%- macro deduplicate(relation, partition_by, order_by) -%}
-    {{ return(adapter.dispatch('deduplicate', 'dbt_utils')(relation, partition_by, order_by)) }}
+    {{ return(adapter.dispatch('deduplicate', 'dwaation, partition_by, order_by)) }}
 {% endmacro %}
 
 {%- macro default__deduplicate(relation, partition_by, order_by) -%}

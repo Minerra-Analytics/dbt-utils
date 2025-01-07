@@ -5,7 +5,7 @@ Extracts the path from a URL string.
 ### Usage
 ```sql
 select
-    {{ dbt_utils.get_url_path('url') }} as path
+    {{ dwa.get_url_path('url') }} as path
 from {{ ref('data_urls') }}
 ```
 
@@ -17,7 +17,7 @@ Returns the path portion of the URL.
 ```sql
 -- Example 1: Extracts the path from a URL
 select
-    {{ dbt_utils.get_url_path('url') }} as path
+    {{ dwa.get_url_path('url') }} as path
 from {{ ref('data_urls') }}
 ```
 

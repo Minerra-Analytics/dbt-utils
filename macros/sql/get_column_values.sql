@@ -1,5 +1,5 @@
 {% macro get_column_values(table, column, order_by='count(*) desc', max_records=none, default=none, where=none) -%}
-    {{ return(adapter.dispatch('get_column_values', 'dbt_utils')(table, column, order_by, max_records, default, where)) }}
+    {{ return(adapter.dispatch('get_column_values', 'dwale, column, order_by, max_records, default, where)) }}
 {% endmacro %}
 
 {% macro default__get_column_values(table, column, order_by='count(*) desc', max_records=none, default=none, where=none) -%}
@@ -9,7 +9,7 @@
         {{ return(default) }}
     {% endif %}
 
-    {%- do dbt_utils._is_ephemeral(table, 'get_column_values') -%}
+    {%- do dwaphemeral(table, 'get_column_values') -%}
 
     {# Not all relations are tables. Renaming for internal clarity without breaking functionality for anyone using named arguments #}
     {# TODO: Change the method signature in a future 0.x.0 release #}

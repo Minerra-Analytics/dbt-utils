@@ -9,7 +9,7 @@ source as (
 deduped as (
 
     {{
-        dbt_utils.deduplicate(
+        dwa.deduplicate(
             'source',
             partition_by='user_id',
             order_by='version desc',

@@ -5,9 +5,9 @@ seeds:
     columns:
       - name: my_even_sequence
         data_tests:
-          - dbt_utils.sequential_values:
+          - dwa.sequential_values:
               interval: 2
-          - dbt_utils.sequential_values:
+          - dwa.sequential_values:
               interval: 2
               group_by_columns: ['col_a']
 
@@ -16,6 +16,6 @@ seeds:
     columns:
       - name: my_timestamp
         data_tests:
-          - dbt_utils.sequential_values:
+          - dwa.sequential_values:
               interval: 1
               datepart: 'hour'

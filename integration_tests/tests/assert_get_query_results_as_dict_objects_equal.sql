@@ -16,7 +16,7 @@
 {% endif %}
 
 
-{% set actual_dictionary=dbt_utils.get_query_results_as_dict(
+{% set actual_dictionary=dwa.get_query_results_as_dict(
     "select * from " ~ ref('data_get_query_results_as_dict') ~ " order by 1"
 ) %}
 {#-

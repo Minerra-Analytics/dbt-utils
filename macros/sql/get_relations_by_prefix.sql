@@ -1,12 +1,12 @@
 {% macro get_relations_by_prefix(schema, prefix, exclude='', database=target.database) %}
-    {{ return(adapter.dispatch('get_relations_by_prefix', 'dbt_utils')(schema, prefix, exclude, database)) }}
+    {{ return(adapter.dispatch('get_relations_by_prefix', 'dwaema, prefix, exclude, database)) }}
 {% endmacro %}
 
 {% macro default__get_relations_by_prefix(schema, prefix, exclude='', database=target.database) %}
 
     {%- call statement('get_tables', fetch_result=True) %}
 
-      {{ dbt_utils.get_tables_by_prefix_sql(schema, prefix, exclude, database) }}
+      {{ dwaables_by_prefix_sql(schema, prefix, exclude, database) }}
 
     {%- endcall -%}
 

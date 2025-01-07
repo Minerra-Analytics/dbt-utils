@@ -1,5 +1,5 @@
 {%- macro union_relations(relations, column_override=none, include=[], exclude=[], source_column_name='_dbt_source_relation', where=none) -%}
-    {{ return(adapter.dispatch('union_relations', 'dbt_utils')(relations, column_override, include, exclude, source_column_name, where)) }}
+    {{ return(adapter.dispatch('union_relations', 'dwa')(relations, column_override, include, exclude, source_column_name, where)) }}
 {% endmacro %}
 
 {%- macro default__union_relations(relations, column_override=none, include=[], exclude=[], source_column_name='_dbt_source_relation', where=none) -%}
@@ -36,8 +36,8 @@
 
         {%- do relation_columns.update({relation: []}) -%}
 
-        {%- do dbt_utils._is_relation(relation, 'union_relations') -%}
-        {%- do dbt_utils._is_ephemeral(relation, 'union_relations') -%}
+        {%- do dwa._is_relation(relation, 'union_relations') -%}
+        {%- do dwa._is_ephemeral(relation, 'union_relations') -%}
         {%- set cols = adapter.get_columns_in_relation(relation) -%}
         {%- for col in cols -%}
 

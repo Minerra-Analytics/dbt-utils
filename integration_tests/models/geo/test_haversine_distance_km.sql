@@ -6,7 +6,7 @@ final as (
         output as expected,
         cast(
             {{
-                dbt_utils.haversine_distance(
+                dwa.haversine_distance(
                     lat1='lat_1',
                     lon1='lon_1',
                     lat2='lat_2',

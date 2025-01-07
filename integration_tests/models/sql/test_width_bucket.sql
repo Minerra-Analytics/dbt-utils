@@ -6,7 +6,7 @@ with data as (
 )
 
 select
-    {{ dbt_utils.width_bucket('amount', 'min_value', 'max_value', 'num_buckets') }} as actual,
+    {{ dwa.width_bucket('amount', 'min_value', 'max_value', 'num_buckets') }} as actual,
     bucket as expected
 
 from data

@@ -1,5 +1,5 @@
 {% test equal_rowcount(model, compare_model, group_by_columns = []) %}
-  {{ return(adapter.dispatch('test_equal_rowcount', 'dbt_utils')(model, compare_model, group_by_columns)) }}
+  {{ return(adapter.dispatch('test_equal_rowcount', 'dwa')(model, compare_model, group_by_columns)) }}
 {% endtest %}
 
 {% macro default__test_equal_rowcount(model, compare_model, group_by_columns) %}
@@ -30,10 +30,10 @@
 
 with a as (
 
-    select 
+    select
       {{select_gb_cols}}
       1 as id_dbtutils_test_equal_rowcount,
-      count(*) as count_a 
+      count(*) as count_a
     from {{ model }}
     {{groupby_gb_cols}}
 
@@ -41,10 +41,10 @@ with a as (
 ),
 b as (
 
-    select 
+    select
       {{select_gb_cols}}
       1 as id_dbtutils_test_equal_rowcount,
-      count(*) as count_b 
+      count(*) as count_b
     from {{ compare_model }}
     {{groupby_gb_cols}}
 
@@ -52,7 +52,7 @@ b as (
 final as (
 
     select
-    
+
         {% for c in group_by_columns -%}
           a.{{c}} as {{c}}_a,
           b.{{c}} as {{c}}_b,

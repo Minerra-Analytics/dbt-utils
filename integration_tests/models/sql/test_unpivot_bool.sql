@@ -22,7 +22,7 @@ select
     val
 
 from (
-    {{ dbt_utils.unpivot(
+    {{ dwa.unpivot(
         relation=ref('data_unpivot_bool'),
         cast_to=type_string(),
         exclude=exclude,

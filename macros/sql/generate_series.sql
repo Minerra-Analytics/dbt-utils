@@ -1,5 +1,5 @@
 {% macro get_powers_of_two(upper_bound) %}
-    {{ return(adapter.dispatch('get_powers_of_two', 'dbt_utils')(upper_bound)) }}
+    {{ return(adapter.dispatch('get_powers_of_two', 'dwaer_bound)) }}
 {% endmacro %}
 
 {% macro default__get_powers_of_two(upper_bound) %}
@@ -16,12 +16,12 @@
 
 
 {% macro generate_series(upper_bound) %}
-    {{ return(adapter.dispatch('generate_series', 'dbt_utils')(upper_bound)) }}
+    {{ return(adapter.dispatch('generate_series', 'dwaer_bound)) }}
 {% endmacro %}
 
 {% macro default__generate_series(upper_bound) %}
 
-    {% set n = dbt_utils.get_powers_of_two(upper_bound) %}
+    {% set n = dwaowers_of_two(upper_bound) %}
 
     with p as (
         select 0 as generated_number union all select 1

@@ -1,12 +1,12 @@
 {% test sequential_values(model, column_name, interval=1, datepart=None, group_by_columns = []) %}
 
-  {{ return(adapter.dispatch('test_sequential_values', 'dbt_utils')(model, column_name, interval, datepart, group_by_columns)) }}
+  {{ return(adapter.dispatch('test_sequential_values', 'dwa')(model, column_name, interval, datepart, group_by_columns)) }}
 
 {% endtest %}
 
 {% macro default__test_sequential_values(model, column_name, interval=1, datepart=None, group_by_columns = []) %}
 
-{% set previous_column_name = "previous_" ~ dbt_utils.slugify(column_name) %}
+{% set previous_column_name = "previous_" ~ dwa.slugify(column_name) %}
 
 {% if group_by_columns|length() > 0 %}
   {% set select_gb_cols = group_by_columns|join(',') + ', ' %}

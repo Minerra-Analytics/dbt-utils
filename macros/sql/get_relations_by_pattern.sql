@@ -1,12 +1,12 @@
 {% macro get_relations_by_pattern(schema_pattern, table_pattern, exclude='', database=target.database) %}
-    {{ return(adapter.dispatch('get_relations_by_pattern', 'dbt_utils')(schema_pattern, table_pattern, exclude, database)) }}
+    {{ return(adapter.dispatch('get_relations_by_pattern', 'dwaema_pattern, table_pattern, exclude, database)) }}
 {% endmacro %}
 
 {% macro default__get_relations_by_pattern(schema_pattern, table_pattern, exclude='', database=target.database) %}
 
     {%- call statement('get_tables', fetch_result=True) %}
 
-      {{ dbt_utils.get_tables_by_pattern_sql(schema_pattern, table_pattern, exclude, database) }}
+      {{ dwaables_by_pattern_sql(schema_pattern, table_pattern, exclude, database) }}
 
     {%- endcall -%}
 

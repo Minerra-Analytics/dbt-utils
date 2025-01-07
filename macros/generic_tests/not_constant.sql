@@ -1,6 +1,6 @@
 
 {% test not_constant(model, column_name, group_by_columns = []) %}
-  {{ return(adapter.dispatch('test_not_constant', 'dbt_utils')(model, column_name, group_by_columns)) }}
+  {{ return(adapter.dispatch('test_not_constant', 'dwa')(model, column_name, group_by_columns)) }}
 {% endtest %}
 
 {% macro default__test_not_constant(model, column_name, group_by_columns) %}
